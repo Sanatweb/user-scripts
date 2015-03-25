@@ -13,7 +13,8 @@ window.require = {
 };
 
 $(function() {
-    $(document).on("click", ".wmd-snippet-button", function() {
+    $(document).on("popupLoad", function(e) {
+        if (!e.popup || !e.popup.hasClass || !e.popup.hasClass('popup-snippet')) return;
         window.MonacoEnvironment = window.MonacoEnvironment || {
             getWorkerUrl: function (workerId, label)
             {
