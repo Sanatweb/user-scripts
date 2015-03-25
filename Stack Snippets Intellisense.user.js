@@ -43,7 +43,7 @@ $(function() {
             ).done(initialiseEditor);
         });
     });
-})
+});
 
 function addStyle(url, name) {
     var link = $('<link rel="stylesheet" type="text/css" />').attr('href', url);
@@ -55,25 +55,43 @@ function addStyle(url, name) {
 }
 
 function initialiseEditor() {
+    function updateTextArea() {
+        var model = this.newEditor.getModel();
+        var version = model.getVersionId();
+        if (version !== this.version) {
+            this.textArea.text(model.getValue());
+            this.version = version;
+        }
+    }
+    
     var js = {
         domNode: $(".snippet-box-bottom.snippet-box-left .snippet-box-container")[0],
         originalEditor: $(".snippet-box-bottom.snippet-box-left .CodeMirror"),
+        textArea: $(".snippet-box-bottom.snippet-box-left .snippet-box-edit"),
         newEditor: null,
-        mode: null
+        mode: null,
+        version: null,
+        updateTextArea: updateTextArea
     };
     
     var html = {
         domNode: $(".snippet-box-top.snippet-box-left .snippet-box-container")[0],
         originalEditor: $(".snippet-box-top.snippet-box-left .CodeMirror"),
+        textArea: $(".snippet-box-top.snippet-box-left .snippet-box-edit"),
         newEditor: null,
-        mode: null
+        mode: null,
+        version: null,
+        updateTextArea: updateTextArea
     };
     
     var css = {
         domNode: $(".snippet-box-top.snippet-box-right .snippet-box-container")[0],
         originalEditor: $(".snippet-box-top.snippet-box-right .CodeMirror"),
+        textArea: $(".snippet-box-top.snippet-box-right .snippet-box-edit"),
         newEditor: null,
         mode: null,
+        version: null,
+        updateTextArea: updateTextArea
     };
     
     var IDLE_STATE = 0,
@@ -147,5 +165,16 @@ function initialiseEditor() {
                 }
             }
         }
+
+        setInterval(function () {
+            if (state < FINISHED) {
+                return;
+            }
+
+            js.updateTextArea();
+            css.updateTextArea();
+            html.updateTextArea();
+        }, 1000);
+
     })();
 }
