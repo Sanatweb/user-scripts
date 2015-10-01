@@ -12,3 +12,4 @@ $(".vote").hide();
 $("#answers").hide();
 $("#sidebar").hide();
 $(".comment").hide();
+$(".fw").hide();
